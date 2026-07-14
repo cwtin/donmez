@@ -221,7 +221,7 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
 .nav-links {
   display: flex;
   gap: 36px;
-  margin-right: -500px;
+  margin-right: -300px;
 }
 .nav-links a {
   color: rgba(255,255,255,0.75);
@@ -348,6 +348,7 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
+  
 }
 .hero-scroll::after {
   content: '';
@@ -1963,4 +1964,29 @@ body.lightbox-open {
     transform: none !important;
     filter: none !important;
   }
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    overflow-x:hidden !important;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+img,
+video{
+    max-width:100%;
+    height:auto;
+}
+
+.container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    padding:0 20px;
 }
