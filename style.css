@@ -221,10 +221,11 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
 .nav-links {
   display: flex;
   gap: 36px;
+  margin-right: -500px;
 }
 .nav-links a {
   color: rgba(255,255,255,0.75);
-  font-size: 0.95rem;
+  font-size: 20px;
   font-weight: 500;
   transition: color var(--transition);
   position: relative;
@@ -1658,4 +1659,308 @@ body.lightbox-open {
 
 .project-gallery-items {
   display: none !important;
+}
+
+/* Galeri lightbox */
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 90px;
+
+  background: rgba(5, 7, 10, 0.96);
+  backdrop-filter: blur(8px);
+}
+
+.gallery-lightbox-media {
+  width: min(1100px, 100%);
+  height: min(75vh, 720px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  overflow: hidden;
+  background: #090b0f;
+}
+
+.gallery-lightbox-media img,
+.gallery-lightbox-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gallery-lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+
+  width: 52px;
+  height: 52px;
+
+  transform: translateY(-50%);
+
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+
+  color: white;
+  background: rgba(255,255,255,0.1);
+
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.gallery-lightbox-prev {
+  left: 24px;
+}
+
+.gallery-lightbox-next {
+  right: 24px;
+}
+
+.gallery-lightbox-counter {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: white;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .gallery-lightbox {
+    padding: 65px 12px 35px;
+  }
+
+  .gallery-lightbox-media {
+    height: 65vh;
+  }
+
+  .gallery-lightbox-arrow {
+    width: 42px;
+    height: 42px;
+  }
+
+  .gallery-lightbox-prev {
+    left: 12px;
+  }
+
+  .gallery-lightbox-next {
+    right: 12px;
+  }
+}
+/* FOTO VE VİDEO AYNI GÖRÜNSÜN */
+.gallery-item img,
+.gallery-item video{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    border-radius:20px;
+}
+
+/* Video kartı */
+.gallery-item video{
+    background:#111;
+}
+
+/* Oynat ikonu */
+.gallery-item .zoom-icon{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(10px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    z-index:5;
+    transition:.35s;
+}
+
+.gallery-item:hover .zoom-icon{
+    transform:translate(-50%,-50%) scale(1.12);
+    background:#c79b4b;
+}
+
+.gallery-item .zoom-icon svg{
+    width:30px;
+    height:30px;
+    fill:#fff;
+}
+
+/* =========================================
+   HERO AÇILIŞ ANİMASYONU
+========================================= */
+
+.hero-animate .hero-bg img {
+  transform: scale(1.08);
+  animation: heroBackgroundZoom 7s ease-out forwards;
+}
+
+.hero-anim {
+  opacity: 0;
+  transform: translateY(40px);
+  filter: blur(6px);
+}
+
+.hero-animate.hero-loaded .hero-title-anim {
+  animation: heroContentReveal 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay: 0.15s;
+}
+
+.hero-animate.hero-loaded .hero-text-anim {
+  animation: heroContentReveal 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay: 0.45s;
+}
+
+.hero-animate.hero-loaded .hero-buttons-anim {
+  animation: heroContentReveal 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay: 0.75s;
+}
+
+.hero-scroll-anim {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.hero-animate.hero-loaded .hero-scroll-anim {
+  animation:
+    heroScrollReveal 0.8s ease forwards 1.1s,
+    heroScrollFloat 2s ease-in-out infinite 2s;
+}
+
+.hero-buttons-anim .btn {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.hero-animate.hero-loaded .hero-buttons-anim .btn:first-child {
+  animation: heroButtonReveal 0.65s ease forwards;
+  animation-delay: 0.9s;
+}
+
+.hero-animate.hero-loaded .hero-buttons-anim .btn:last-child {
+  animation: heroButtonReveal 0.65s ease forwards;
+  animation-delay: 1.05s;
+}
+
+.hero-title-anim .gold-line {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-title-anim .gold-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+
+  width: 0;
+  height: 2px;
+
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.hero-animate.hero-loaded .hero-title-anim .gold-line::after {
+  animation: heroGoldLine 0.9s ease forwards;
+  animation-delay: 0.95s;
+}
+
+@keyframes heroContentReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroButtonReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroBackgroundZoom {
+  from {
+    transform: scale(1.08);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes heroScrollReveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroScrollFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(7px);
+  }
+}
+
+@keyframes heroGoldLine {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+/* Hareket azaltma ayarı açık olan kullanıcılar */
+@media (prefers-reduced-motion: reduce) {
+  .hero-animate .hero-bg img,
+  .hero-anim,
+  .hero-scroll-anim,
+  .hero-buttons-anim .btn,
+  .hero-title-anim .gold-line::after {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }

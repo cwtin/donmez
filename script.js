@@ -186,41 +186,182 @@ ${message}`;
   });
 })();
 
-// ===== LIGHTBOX =====
+// ===== GALERİ LIGHTBOX - FOTOĞRAF + VİDEO =====
 (function () {
-  var galleryItems = document.querySelectorAll('.gallery-item');
+  var galleryItems = Array.from(
+    document.querySelectorAll('.gallery-grid .gallery-item')
+  );
 
-  galleryItems.forEach(function (item) {
+  if (galleryItems.length === 0) return;
+
+  var currentIndex = 0;
+
+  function getMedia(item) {
+    var img = item.querySelector('img');
+    var video = item.querySelector('video');
+
+    if (video) {
+      var source = video.querySelector('source');
+
+      return {
+        type: 'video',
+        src: source ? source.src : video.src,
+        poster: video.poster || ''
+      };
+    }
+
+    if (img) {
+      return {
+        type: 'image',
+        src: img.src,
+        alt: img.alt || 'Galeri görseli'
+      };
+    }
+
+    return null;
+  }
+
+  function openLightbox(index) {
+    currentIndex = index;
+
+    var lightbox = document.createElement('div');
+    lightbox.className = 'lightbox gallery-lightbox';
+
+    var mediaWrap = document.createElement('div');
+    mediaWrap.className = 'gallery-lightbox-media';
+
+    var closeButton = document.createElement('button');
+    closeButton.className = 'lightbox-close';
+    closeButton.type = 'button';
+    closeButton.innerHTML = '&times;';
+    closeButton.setAttribute('aria-label', 'Galeriyi kapat');
+
+    var previousButton = document.createElement('button');
+    previousButton.className = 'gallery-lightbox-arrow gallery-lightbox-prev';
+    previousButton.type = 'button';
+    previousButton.innerHTML = '&#10094;';
+    previousButton.setAttribute('aria-label', 'Önceki');
+
+    var nextButton = document.createElement('button');
+    nextButton.className = 'gallery-lightbox-arrow gallery-lightbox-next';
+    nextButton.type = 'button';
+    nextButton.innerHTML = '&#10095;';
+    nextButton.setAttribute('aria-label', 'Sonraki');
+
+    var counter = document.createElement('div');
+    counter.className = 'gallery-lightbox-counter';
+
+    lightbox.appendChild(closeButton);
+    lightbox.appendChild(previousButton);
+    lightbox.appendChild(mediaWrap);
+    lightbox.appendChild(nextButton);
+    lightbox.appendChild(counter);
+
+    document.body.appendChild(lightbox);
+    document.body.style.overflow = 'hidden';
+
+    function showMedia() {
+      var item = galleryItems[currentIndex];
+      var media = getMedia(item);
+
+      mediaWrap.innerHTML = '';
+
+      if (!media) return;
+
+      if (media.type === 'video') {
+        var video = document.createElement('video');
+
+        video.src = media.src;
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+
+        if (media.poster) {
+          video.poster = media.poster;
+        }
+
+        mediaWrap.appendChild(video);
+      } else {
+        var image = document.createElement('img');
+
+        image.src = media.src;
+        image.alt = media.alt;
+
+        mediaWrap.appendChild(image);
+      }
+
+      counter.textContent =
+        currentIndex + 1 + ' / ' + galleryItems.length;
+    }
+
+    function showPrevious() {
+      stopVideo();
+
+      currentIndex =
+        (currentIndex - 1 + galleryItems.length) %
+        galleryItems.length;
+
+      showMedia();
+    }
+
+    function showNext() {
+      stopVideo();
+
+      currentIndex =
+        (currentIndex + 1) %
+        galleryItems.length;
+
+      showMedia();
+    }
+
+    function stopVideo() {
+      var video = mediaWrap.querySelector('video');
+
+      if (video) {
+        video.pause();
+      }
+    }
+
+    function closeLightbox() {
+      stopVideo();
+      lightbox.remove();
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', keyboardHandler);
+    }
+
+    function keyboardHandler(event) {
+      if (event.key === 'Escape') {
+        closeLightbox();
+      }
+
+      if (event.key === 'ArrowLeft') {
+        showPrevious();
+      }
+
+      if (event.key === 'ArrowRight') {
+        showNext();
+      }
+    }
+
+    closeButton.addEventListener('click', closeLightbox);
+    previousButton.addEventListener('click', showPrevious);
+    nextButton.addEventListener('click', showNext);
+
+    lightbox.addEventListener('click', function (event) {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener('keydown', keyboardHandler);
+
+    showMedia();
+  }
+
+  galleryItems.forEach(function (item, index) {
     item.addEventListener('click', function () {
-      var img = item.querySelector('img');
-      if (!img) return;
-
-      var lb = document.createElement('div');
-      lb.className = 'lightbox';
-
-      var lbImg = document.createElement('img');
-      lbImg.src = img.src.replace('w=600', 'w=1200');
-      lb.appendChild(lbImg);
-
-      var close = document.createElement('button');
-      close.className = 'lightbox-close';
-      close.innerHTML = '&times;';
-      close.setAttribute('aria-label', 'Close');
-      lb.appendChild(close);
-
-      document.body.appendChild(lb);
-
-      function closeLb() {
-        lb.remove();
-        document.removeEventListener('keydown', escHandler);
-      }
-      function escHandler(e) {
-        if (e.key === 'Escape') closeLb();
-      }
-
-      lb.addEventListener('click', closeLb);
-      close.addEventListener('click', function (e) { e.stopPropagation(); closeLb(); });
-      document.addEventListener('keydown', escHandler);
+      openLightbox(index);
     });
   });
 })();
@@ -544,4 +685,15 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     { passive: true }
   );
+});
+
+// ===== HERO AÇILIŞ ANİMASYONU =====
+window.addEventListener("load", function () {
+  var hero = document.querySelector(".hero-animate");
+
+  if (!hero) return;
+
+  setTimeout(function () {
+    hero.classList.add("hero-loaded");
+  }, 250);
 });
